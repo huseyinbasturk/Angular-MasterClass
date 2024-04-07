@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Reservation } from '../models/reservation';
 import { ReservationService } from '../reservation/reservation.service';
+import { async } from 'rxjs';
+import { log } from 'console';
 
 @Component({
   selector: 'app-reservation-list',
@@ -11,14 +13,20 @@ export class ReservationListComponent implements OnInit{
   
   reservations : Reservation[] = []  
   constructor(private reservationService: ReservationService){}
+
   ngOnInit(): void {
-    this.reservations = this.reservationService.getReservations();
+      this.reservationService.getReservations().subscribe(reservations => {
+      this.reservations = reservations
+    });
+    console.log(this.reservations)
 
     
   }
 
   deleteReservation(id: string){
-    this.reservationService.deleteReservation(id);
+    this.reservationService.deleteReservation(id).subscribe(() => {
+      console.log("Delete request got processed")
+    });
   }
 
 
